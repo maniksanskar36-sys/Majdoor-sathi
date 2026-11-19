@@ -1,0 +1,512 @@
+<!DOCTYPE html>  <html lang="hi">  
+<head>  
+<meta charset="UTF-8">  
+<meta name="viewport" content="width=device-width, initial-scale=1.0">  
+<title>Majdoor साथी</title>  
+<style>  
+*{box-sizing:border-box}  
+body{margin:0;font-family:Arial,sans-serif;background:linear-gradient(135deg,#071b35,#164e79);color:white;padding:18px 0}  
+.container{width:92%;max-width:450px;margin:auto}  
+.logo{text-align:center;font-size:27px;font-weight:bold;margin:15px}  
+.box{background:white;color:#123e65;padding:18px;border-radius:15px;margin:12px 0;box-shadow:0 5px 15px #0004}  
+.card{background:#fff;color:#123e65;padding:18px;border-radius:14px;text-align:center;font-weight:bold;cursor:pointer}  
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:15px}  
+input,select{width:100%;padding:13px;margin:8px 0;border:0;border-radius:9px;font-size:16px;background:#f0f4f8}  
+label{display:block;margin-top:12px;text-align:left;color:#123e65}  
+button,.btn{width:100%;border:0;border-radius:10px;padding:14px;background:#ffb300;color:#142b43;font-weight:bold;font-size:16px;margin-top:12px;cursor:pointer}  
+.back{background:#ffffff25;padding:12px;border-radius:10px;margin-bottom:12px;cursor:pointer}  
+.screen{display:none}  
+.item{background:white;color:#123e65;padding:14px;border-radius:12px;margin:10px 0}  
+.item button{background:#164e79;color:white}  
+.item a{text-decoration:none}  
+.photo{width:90px;height:90px;border-radius:50%;object-fit:cover;display:none;margin:10px auto}  
+.helpline{background:#087b50;color:white;padding:17px;border-radius:14px;text-align:center;margin-top:15px}  
+.status{text-align:center;font-size:13px;padding:8px}  
+.small{font-size:13px;color:#52677a}  
+</style>  
+</head>  
+<body>  
+<div class="container">  <div id="language" class="screen" style="display:block">  
+<div class="logo">🇮🇳 मजदूर साथी</div>  
+<div class="box">  
+<h2>अपनी भाषा चुनें</h2>  
+<button onclick="startApp()">हिंदी</button>  
+<button onclick="startApp()">English</button>  
+</div>  
+</div>  <div id="role" class="screen">  
+<div class="logo">🇮🇳 मजदूर साथी</div>  
+<div class="box">  
+<h2>आप कौन हैं?</h2>  
+<button onclick="openScreen('workerForm')">👷 मैं मजदूर हूँ</button>  
+<button onclick="openScreen('ownerForm')">🏠 मुझे मजदूर चाहिए</button>  
+</div>  
+</div>  <div id="workerForm" class="screen">  
+<div class="back" onclick="openScreen('role')">← वापस</div>  
+<div class="logo">👷 मजदूर रजिस्ट्रेशन</div>  
+<div class="box">  
+<label>फोटो (अभी केवल Preview)</label>  
+<input type="file" accept="image/*" onchange="photoPreview(event,'workerPhoto')">  
+<img id="workerPhoto" class="photo">  <label>पूरा नाम</label>
+<input id="wName" placeholder="अपना नाम">
+<label>मोबाइल नंबर</label>
+<input id="wMobile" type="tel" maxlength="10" placeholder="10 अंकों का नंबर">
+<label>राज्य</label>
+<select id="wState" onchange="loadDistricts('wState','wDistrict')">
+
+<option value="">राज्य चुनें</option>  
+</select>  
+<label>जिला खोजें या चुनें</label>  
+<input id="wDistrict" list="wDistrictList" placeholder="जिला लिखें">  
+<datalist id="wDistrictList"></datalist>  
+<label>गाँव / शहर</label>  
+<input id="wCity" placeholder="गाँव या शहर">  
+<label>काम</label>  
+<select id="wWork">  
+<option value="">काम चुनें</option>  
+<option>राजमिस्त्री</option><option>हेल्पर</option>  
+<option>पेंटर</option><option>इलेक्ट्रिशियन</option>  
+<option>प्लंबर</option><option>बढ़ई</option>  
+<option>वेल्डर</option><option>कृषि मजदूर</option>  
+<option>अन्य</option>  
+</select>  
+<label>अनुभव</label>  
+<select id="wExperience">  
+<option value="">अनुभव चुनें</option>  
+<option>नया कामगार</option>  
+<option>1 साल से कम</option>  
+<option>1 से 3 साल</option>  
+<option>3 से 5 साल</option>  
+<option>5 से 10 साल</option>  
+<option>10 साल से अधिक</option>  
+</select>  
+<label>काम की उपलब्धता</label>  
+<select id="wAvailable">  
+<option value="काम उपलब्ध है">काम उपलब्ध है</option>  
+<option value="अभी काम पर हूँ">अभी काम पर हूँ</option>  
+</select>  
+<label>रोज की मजदूरी ₹</label>  
+<input id="wSalary" type="number" placeholder="जैसे 500">  
+<button onclick="registerWorker()">रजिस्ट्रेशन करें</button>  
+</div>  
+</div>  <div id="ownerForm" class="screen">  
+<div class="back" onclick="openScreen('role')">← वापस</div>  
+<div class="logo">🏠 मालिक रजिस्ट्रेशन</div>  
+<div class="box">  
+<label>फोटो (अभी केवल Preview)</label>  
+<input type="file" accept="image/*" onchange="photoPreview(event,'ownerPhoto')">  
+<img id="ownerPhoto" class="photo">  
+<label>पूरा नाम</label>  
+<input id="oName" placeholder="अपना नाम">  
+<label>मोबाइल नंबर</label>  
+<input id="oMobile" type="tel" maxlength="10" placeholder="10 अंकों का नंबर">  
+<label>राज्य</label>  
+<select id="oState" onchange="loadDistricts('oState','oDistrict')">  
+<option value="">राज्य चुनें</option>  
+</select>  
+<label>जिला खोजें या चुनें</label>  
+<input id="oDistrict" list="oDistrictList" placeholder="जिला लिखें">  
+<datalist id="oDistrictList"></datalist>  
+<label>गाँव / शहर</label>  
+<input id="oCity" placeholder="गाँव या शहर">  
+<button onclick="registerOwner()">रजिस्ट्रेशन करें</button>  
+</div>  
+</div>  <div id="dashboard" class="screen">  
+<div class="logo">🇮🇳 Majdoor साथी</div>  
+<div class="box">  
+<h2 id="welcome">आपका स्वागत है!</h2>  
+<p>भारत के मजदूरों और मालिकों का अपना प्लेटफॉर्म</p>  
+<div class="status" id="connectionStatus">Firebase से जुड़ रहा है...</div>  
+</div>  
+<div class="grid">  
+<div class="card" onclick="showWorkers()">👷<br>मजदूर खोजें</div>  
+<div class="card" onclick="showJobs()">🔎<br>काम खोजें</div>  
+<div class="card" onclick="openScreen('jobForm')">📝<br>काम पोस्ट करें</div>  
+<div class="card" onclick="showProfile()">👤<br>मेरी प्रोफाइल</div>  
+<div class="card" onclick="premium()">⭐<br>Premium ₹10</div>  
+<div class="card" onclick="openScreen('help')">☎️<br>Helpline</div>  
+</div>  
+<div class="helpline">  
+<h3>📞 सहायता केंद्र</h3>  
+<p>6267211174</p>  
+<a href="tel:6267211174"><button>Call Now</button></a>  
+<a href="https://wa.me/916267211174" target="_blank"><button style="background:#25D366;color:white">WhatsApp करें</button></a>  
+</div>  
+</div>  <div id="workers" class="screen">  
+<div class="back" onclick="openScreen('dashboard')">← Dashboard</div>  
+<h2>👷 मजदूर खोजें</h2>  
+<input id="workerSearch" placeholder="नाम, काम, जिला खोजें" oninput="renderWorkers()">  
+<div id="workerResults"></div>  
+</div>  <div id="jobs" class="screen">  
+<div class="back" onclick="openScreen('dashboard')">← Dashboard</div>  
+<h2>🔎 उपलब्ध काम</h2>  
+<input id="jobSearch" placeholder="काम या जिला खोजें" oninput="renderJobs()">  
+<div id="jobResults"></div>  
+</div>  <div id="jobForm" class="screen">  
+<div class="back" onclick="openScreen('dashboard')">← Dashboard</div>  
+<h2>📝 काम पोस्ट करें</h2>  
+<div class="box">  
+<label>काम का नाम</label>  
+<input id="jWork" placeholder="जैसे राजमिस्त्री">  
+<label>मजदूरों की संख्या</label>  
+<input id="jCount" type="number" placeholder="जैसे 5">  
+<label>जगह / जिला</label>  
+<input id="jPlace" placeholder="जिला और शहर">  
+<label>रोज का बजट ₹</label>  
+<input id="jSalary" type="number" placeholder="जैसे 500">  
+<label>मोबाइल नंबर</label>  
+<input id="jMobile" type="tel" maxlength="10" placeholder="10 अंकों का नंबर">  
+<label>कितने दिन का काम?</label>  
+<input id="jDuration" placeholder="जैसे 10 दिन">  
+<button onclick="postJob()">काम पोस्ट करें</button>  
+</div>  
+</div>  <div id="profile" class="screen">  
+<div class="back" onclick="openScreen('dashboard')">← Dashboard</div>  
+<h2>👤 मेरी प्रोफाइल</h2>  
+<div id="profileData" class="box"></div>  
+</div>  <div id="help" class="screen">  
+<div class="back" onclick="openScreen('dashboard')">← Dashboard</div>  
+<div class="helpline">  
+<h2>☎️ Helpline Support</h2>  
+<h2>6267211174</h2>  
+<a href="tel:6267211174"><button>📞 अभी कॉल करें</button></a>  
+<a href="https://wa.me/916267211174" target="_blank"><button style="background:#25D366;color:white">WhatsApp सहायता</button></a>  
+</div>  
+</div>  </div>  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js"></script>  <script>  
+const firebaseConfig = {  
+apiKey:"AIzaSyBy21tmIvqG7f5tM2JLDcAzbqlf2kEPTC0",  
+authDomain:"majdoor-sathi-1dc97.firebaseapp.com",  
+databaseURL:"https://majdoor-sathi-1dc97-default-rtdb.asia-southeast1.firebasedatabase.app",  
+projectId:"majdoor-sathi-1dc97",  
+storageBucket:"majdoor-sathi-1dc97.firebasestorage.app",  
+messagingSenderId:"865403095956",  
+appId:"1:865403095956:web:ce1bc0b0cca42df151dd81"  
+};  
+  
+firebase.initializeApp(firebaseConfig);  
+const auth=firebase.auth();  
+const db=firebase.database();  
+  
+let currentUser=JSON.parse(localStorage.getItem("majdoorCurrentUser")||"null");  
+let workers=[];  
+let jobs=[];  
+let firebaseReady=false;  
+  
+const $=id=>document.getElementById(id);  
+  
+const authReady=new Promise((resolve,reject)=>{  
+const unsubscribe=auth.onAuthStateChanged(async user=>{  
+if(user){  
+unsubscribe();  
+firebaseReady=true;  
+$("connectionStatus").innerText="🟢 Firebase ऑनलाइन जुड़ा है";  
+resolve(user);  
+}else{  
+try{await auth.signInAnonymously()}  
+catch(error){  
+unsubscribe();  
+$("connectionStatus").innerText="🔴 Firebase Login Error: "+error.message;  
+reject(error);  
+}  
+}  
+});  
+});  
+  
+const workersRef=db.ref("workers");  
+const jobsRef=db.ref("jobs");  
+const profilesRef=db.ref("profiles");  
+  
+workersRef.on("value",snapshot=>{  
+workers=[];  
+snapshot.forEach(child=>{  
+workers.push({id:child.key,...child.val()});  
+});  
+renderWorkers();  
+},error=>console.error(error));  
+  
+jobsRef.on("value",snapshot=>{  
+jobs=[];  
+snapshot.forEach(child=>{  
+jobs.push({id:child.key,...child.val()});  
+});  
+renderJobs();  
+},error=>console.error(error));  
+  
+const states=[  
+"Andhra Pradesh","Arunachal Pradesh","Assam","Bihar",  
+"Chhattisgarh","Goa","Gujarat","Haryana","Himachal Pradesh",  
+"Jharkhand","Karnataka","Kerala","Madhya Pradesh",  
+"Maharashtra","Manipur","Meghalaya","Mizoram","Nagaland",  
+"Odisha","Punjab","Rajasthan","Sikkim","Tamil Nadu",  
+"Telangana","Tripura","Uttar Pradesh","Uttarakhand",  
+"West Bengal","Andaman and Nicobar Islands","Chandigarh",  
+"Dadra and Nagar Haveli and Daman and Diu","Delhi",  
+"Jammu and Kashmir","Ladakh","Lakshadweep","Puducherry"  
+];  
+  
+function fillStates(){  
+["wState","oState"].forEach(id=>{  
+states.forEach(s=>$(id).add(new Option(s,s)));  
+});  
+}  
+  
+function startApp(){openScreen("role")}  
+  
+function openScreen(id){  
+document.querySelectorAll(".screen").forEach(s=>s.style.display="none");  
+$(id).style.display="block";  
+}  
+  
+function photoPreview(event,id){  
+const file=event.target.files[0];  
+if(file){  
+const img=$(id);  
+img.src=URL.createObjectURL(file);  
+img.style.display="block";  
+}  
+}  
+  
+function validMobile(n){return /^[6-9][0-9]{9}$/.test(n)}  
+  
+function escapeHTML(value){  
+return String(value??"").replace(/[&<>"']/g,c=>({  
+"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"  
+}[c]));  
+}  
+  
+async function registerWorker(){  
+const name=$("wName").value.trim();  
+const mobile=$("wMobile").value.trim();  
+const state=$("wState").value;  
+const district=$("wDistrict").value.trim();  
+const city=$("wCity").value.trim();  
+const work=$("wWork").value;  
+const salary=$("wSalary").value;  
+const experience=$("wExperience").value;  
+const available=$("wAvailable").value;  
+  
+if(!name||!mobile||!state||!district||!city||!work||!salary||!experience){  
+alert("कृपया सभी जानकारी भरें");return;  
+}  
+if(!validMobile(mobile)){  
+alert("सही 10 अंकों का मोबाइल नंबर डालें");return;  
+}  
+  
+try{  
+await authReady;  
+const user={  
+type:"worker",name,mobile,state,district,city,work,salary,  
+experience,available,  
+uid:auth.currentUser.uid,  
+createdAt:Date.now()  
+};  
+const newWorker=await workersRef.push(user);  
+user.workerKey=newWorker.key;  
+await profilesRef.child(auth.currentUser.uid).set(user);  
+currentUser=user;  
+localStorage.setItem("majdoorCurrentUser",JSON.stringify(user));  
+$("welcome").innerText="स्वागत है "+name+" जी!";  
+alert("आपका रजिस्ट्रेशन ऑनलाइन सेव हो गया!");  
+openScreen("dashboard");  
+}catch(error){  
+alert("रजिस्ट्रेशन नहीं हुआ: "+error.message);  
+}  
+}  
+  
+async function registerOwner(){  
+const name=$("oName").value.trim();  
+const mobile=$("oMobile").value.trim();  
+const state=$("oState").value;  
+const district=$("oDistrict").value.trim();  
+const city=$("oCity").value.trim();  
+  
+if(!name||!mobile||!state||!district||!city){  
+alert("कृपया सभी जानकारी भरें");return;  
+}  
+if(!validMobile(mobile)){  
+alert("सही 10 अंकों का मोबाइल नंबर डालें");return;  
+}  
+  
+try{  
+await authReady;  
+const user={  
+type:"owner",name,mobile,state,district,city,  
+uid:auth.currentUser.uid,createdAt:Date.now()  
+};  
+await profilesRef.child(auth.currentUser.uid).set(user);  
+currentUser=user;  
+localStorage.setItem("majdoorCurrentUser",JSON.stringify(user));  
+$("welcome").innerText="स्वागत है "+name+" जी!";  
+alert("मालिक का रजिस्ट्रेशन पूरा हुआ!");  
+openScreen("dashboard");  
+}catch(error){  
+alert("रजिस्ट्रेशन नहीं हुआ: "+error.message);  
+}  
+}  
+  
+function showWorkers(){  
+openScreen("workers");  
+renderWorkers();  
+}  
+  
+function renderWorkers(){  
+const results=$("workerResults");  
+if(!results)return;  
+const q=($("workerSearch")?.value||"").toLowerCase();  
+  
+const list=workers.filter(w=>  
+(w.name+" "+w.work+" "+w.district+" "+w.state+" "+w.city)  
+.toLowerCase().includes(q)  
+);  
+results.innerHTML="";  
+  
+if(!list.length){  
+results.innerHTML="<div class='item'>अभी कोई मजदूर उपलब्ध नहीं है।</div>";  
+return;  
+}  
+  
+list.forEach(w=>{  
+const div=document.createElement("div");  
+div.className="item";  
+div.innerHTML=  
+"<b>👷 "+escapeHTML(w.name)+"</b><br>"+  
+"काम: "+escapeHTML(w.work)+"<br>"+  
+"जिला: "+escapeHTML(w.district)+"<br>"+  
+"राज्य: "+escapeHTML(w.state)+"<br>"+  
+"गाँव/शहर: "+escapeHTML(w.city)+"<br>"+  
+"अनुभव: "+escapeHTML(w.experience||"नहीं बताया")+"<br>"+  
+"उपलब्धता: "+escapeHTML(w.available||"नहीं बताई")+"<br>"+  
+"मजदूरी: ₹"+escapeHTML(w.salary)+  
+"<a href='tel:"+encodeURIComponent(w.mobile)+"'><button>📞 कॉल करें</button></a>"+  
+"<a href='https://wa.me/91"+encodeURIComponent(w.mobile)+"' target='_blank'><button style='background:#25D366'>WhatsApp करें</button></a>";  
+results.appendChild(div);  
+});  
+}  
+  
+function showJobs(){  
+openScreen("jobs");  
+renderJobs();  
+}  
+  
+function renderJobs(){  
+const results=$("jobResults");  
+if(!results)return;  
+const q=($("jobSearch")?.value||"").toLowerCase();  
+  
+const list=jobs.filter(j=>  
+(j.work+" "+j.place+" "+(j.state||"")+" "+(j.district||""))  
+.toLowerCase().includes(q)  
+);  
+results.innerHTML="";  
+  
+if(!list.length){  
+results.innerHTML="<div class='item'>अभी कोई काम पोस्ट नहीं हुआ है।</div>";  
+return;  
+}  
+  
+list.forEach(j=>{  
+const div=document.createElement("div");  
+div.className="item";  
+div.innerHTML=  
+"<b>📝 "+escapeHTML(j.work)+"</b><br>"+  
+"जगह: "+escapeHTML(j.place)+"<br>"+  
+"मजदूर: "+escapeHTML(j.count)+"<br>"+  
+"बजट: ₹"+escapeHTML(j.salary)+" रोज<br>"+  
+"अवधि: "+escapeHTML(j.duration)+  
+"<a href='tel:"+encodeURIComponent(j.mobile)+"'><button>मालिक से संपर्क करें</button></a>"+  
+"<a href='https://wa.me/91"+encodeURIComponent(j.mobile)+"' target='_blank'><button style='background:#25D366'>WhatsApp करें</button></a>";  
+results.appendChild(div);  
+});  
+}  
+  
+async function postJob(){  
+const work=$("jWork").value.trim();  
+const count=$("jCount").value;  
+const place=$("jPlace").value.trim();  
+const salary=$("jSalary").value;  
+const mobile=$("jMobile").value.trim();  
+const duration=$("jDuration").value.trim();  
+  
+if(!work||!count||!place||!salary||!mobile||!duration){  
+alert("सभी जानकारी भरें");return;  
+}  
+if(!validMobile(mobile)){  
+alert("सही मोबाइल नंबर डालें");return;  
+}  
+  
+try{  
+await authReady;  
+await jobsRef.push({  
+work,count,place,salary,mobile,duration,  
+uid:auth.currentUser.uid,createdAt:Date.now()  
+});  
+alert("काम ऑनलाइन पोस्ट हो गया!");  
+["jWork","jCount","jPlace","jSalary","jMobile","jDuration"]  
+.forEach(id=>$(id).value="");  
+openScreen("dashboard");  
+}catch(error){  
+alert("काम पोस्ट नहीं हुआ: "+error.message);  
+}  
+}  
+  
+async function showProfile(){  
+openScreen("profile");  
+let u=currentUser;  
+  
+try{  
+await authReady;  
+const snapshot=await profilesRef.child(auth.currentUser.uid).once("value");  
+if(snapshot.exists()){  
+u=snapshot.val();  
+currentUser=u;  
+localStorage.setItem("majdoorCurrentUser",JSON.stringify(u));  
+}  
+}catch(error){  
+console.log("Profile load error",error);  
+}  
+  
+if(!u){  
+$("profileData").innerText="अभी कोई प्रोफाइल नहीं है।";  
+return;  
+}  
+  
+$("profileData").innerHTML=  
+"<h3>"+(u.type==="worker"?"👷 मजदूर प्रोफाइल":"🏠 मालिक प्रोफाइल")+"</h3>"+  
+"<b>नाम:</b> "+escapeHTML(u.name)+  
+"<br><b>मोबाइल:</b> "+escapeHTML(u.mobile)+  
+"<br><b>राज्य:</b> "+escapeHTML(u.state)+  
+"<br><b>जिला:</b> "+escapeHTML(u.district)+  
+"<br><b>शहर:</b> "+escapeHTML(u.city)+  
+(u.type==="worker"?  
+"<br><b>काम:</b> "+escapeHTML(u.work)+  
+"<br><b>अनुभव:</b> "+escapeHTML(u.experience||"नहीं बताया")+  
+"<br><b>उपलब्धता:</b> "+escapeHTML(u.available||"नहीं बताई")+  
+"<br><b>मजदूरी:</b> ₹"+escapeHTML(u.salary):"")+  
+"<p class='small'>प्रोफाइल Firebase में सेव है।</p>";  
+}  
+  
+function premium(){  
+alert("Premium Lifetime ₹10 फीचर जल्द शुरू होगा। अभी भुगतान चालू नहीं है।");  
+}  
+  
+async function loadDistricts(stateId,districtId){  
+const state=$(stateId).value;  
+const input=$(districtId);  
+const list=$(districtId+"List");  
+input.value="";  
+list.innerHTML="";  
+try{  
+const response=await fetch("https://raw.githubusercontent.com/sab99r/Indian-States-And-Districts/master/states-and-districts.json");  
+if(!response.ok)throw new Error("District data unavailable");  
+const data=await response.json();  
+const match=data.states.find(x=>x.state.toLowerCase()===state.toLowerCase());  
+if(match){  
+match.districts.forEach(d=>list.appendChild(new Option(d,d)));  
+}  
+}catch(error){  
+console.log("District list load nahi hui",error);  
+}  
+}  
+  
+fillStates();  
+</script>  </body>  
+</html>  
